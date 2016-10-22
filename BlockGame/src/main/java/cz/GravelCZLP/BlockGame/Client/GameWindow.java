@@ -2,6 +2,7 @@ package cz.GravelCZLP.BlockGame.Client;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,15 +15,24 @@ import com.esotericsoftware.kryonet.Client;
 
 import cz.GravelCZLP.BlockGame.Client.Input.KeyInput;
 import cz.GravelCZLP.BlockGame.Common.Packets.PacketPlayerLogout;
+import cz.GravelCZLP.BlockGame.Common.Packets.PacketStartLogin;
 
 public class GameWindow extends Canvas {
 
 	private static final long serialVersionUID = 3526633589235617871L;
 	
+	public boolean isConnected = false;
+	public boolean isAuthWindowOpened = false;
+	
+	
+	public ClientMain main;
+	
 	public GameWindow(int width, int height, String title, final ClientMain game) {
 		JFrame frame = new JFrame(title);
 		
 		Dimension dim = new Dimension(width, height);
+		
+		main = game;
 		
 		frame.setPreferredSize(dim);
 		frame.setMaximumSize(dim);
@@ -78,6 +88,17 @@ public class GameWindow extends Canvas {
 	}
 	
 	public void initGame(String player, Client c) {
+		isConnected = true;
+		main.c = c;
+		PacketStartLogin login = new PacketStartLogin(player);
+		c.sendTCP(login);
 		
+	}
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		if (isConnected) {
+			
+		}
 	}
 }

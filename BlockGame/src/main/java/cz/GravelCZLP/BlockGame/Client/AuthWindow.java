@@ -15,14 +15,16 @@ import javax.swing.JTextField;
 
 import com.esotericsoftware.kryonet.Client;
 
+import cz.GravelCZLP.BlockGame.Common.Network;
+
 public class AuthWindow extends JFrame {
 
 	private static final long serialVersionUID = 771822481556979845L;
 
-	
 	public AuthWindow(final ClientMain main) {
 		final Client c = new Client();
 		c.start();
+		Network.injectPackets(c);
 		setTitle("Pls set server and name");
 		setVisible(true);
 		setSize(420, 360);

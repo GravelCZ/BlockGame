@@ -21,10 +21,6 @@ public class ClientMain extends Canvas implements Runnable {
 	public ClientMain() {
 		gameWindow = new GameWindow(WIDTH, HEIGHT, "Block Game", this);
 	}
-	
-	public static void main(String[] args)  {
-		new ClientMain();
-	}
 
 	public synchronized void start() {
 		

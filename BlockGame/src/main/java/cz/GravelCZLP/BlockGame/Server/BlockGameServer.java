@@ -8,17 +8,6 @@ import cz.GravelCZLP.BlockGame.Server.Net.Listeners.PacketListener;
 
 public class BlockGameServer {
 
-	public static int port = 0;
-	
-	public static void main(String[] args) throws IOException {
-		for (int i = 0; i < args.length; i++) {
-			if (args[i].equalsIgnoreCase("--port")) {
-				port = Integer.parseInt(args[(i + 1)]);
-			}
-		}
-		new BlockGameServer().performStartServer();
-	}
-	
 	public Server s;
 	
 	public int mapSizeX;
@@ -26,7 +15,7 @@ public class BlockGameServer {
 	
 	public boolean isReady;
 	
-	public void performStartServer() throws IOException {
+	public void performStartServer(int port) throws IOException {
 		s = new Server();
 		s.start();
 		s.bind(port);
@@ -34,6 +23,5 @@ public class BlockGameServer {
 		
 		mapSizeX = 360;
 		mapSizeZ = 420; // DANK MEMES !!!!!!!11
-		
 	}
 }
