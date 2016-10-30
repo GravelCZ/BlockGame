@@ -2,18 +2,18 @@ package cz.GravelCZLP.BlockGame.Client;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import com.esotericsoftware.kryonet.Client;
 
-import cz.GravelCZLP.BlockGame.Client.Input.KeyInput;
 import cz.GravelCZLP.BlockGame.Common.Packets.PacketPlayerLogout;
 import cz.GravelCZLP.BlockGame.Common.Packets.PacketStartLogin;
 
@@ -23,10 +23,14 @@ public class GameWindow extends Canvas {
 	
 	public boolean isConnected = false;
 	public boolean isAuthWindowOpened = false;
+	public boolean isChatWindowOpened = false;
 	
 	
 	public ClientMain main;
 	
+	public ChatWindow chatWindow;
+	
+	@SuppressWarnings("static-access")
 	public GameWindow(int width, int height, String title, final ClientMain game) {
 		JFrame frame = new JFrame(title);
 		
@@ -41,11 +45,19 @@ public class GameWindow extends Canvas {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
-		frame.addKeyListener(new KeyInput(game));
+		JButton startGame = new JButton("Začít Hru !");
+		startGame.setSize(360, 100);
+		startGame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.startGameRender();
+			}
+		});
+		frame.add(startGame);
 		frame.add(game);
 		frame.pack();
-		game.start();
 		new AuthWindow(game);
+		
 		JMenuBar menubar = new JMenuBar();
 		JMenu gameMenu = new JMenu("Game");
 		JMenu chat = new JMenu("Chat");
@@ -59,10 +71,26 @@ public class GameWindow extends Canvas {
 					game.c.sendTCP(new PacketPlayerLogout(game.thePlayer.uuid));
 					game.c.close();
 				}
-				new AuthWindow(game);
+				if (!isAuthWindowOpened) {
+					new AuthWindow(game);	
+					isAuthWindowOpened = true;
+				} else {
+					JOptionPane.showMessageDialog(null, "Auth Okno již je Otevřeno", "Error: Již Otevřeno", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		});
 		JMenuItem ochatw = new JMenuItem("Otevřít Chat okno");
+		ochatw.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!isChatWindowOpened) {
+					chatWindow = new ChatWindow();
+					isChatWindowOpened = true;
+				} else {
+					JOptionPane.showMessageDialog(null, "Chat okno je již otevřeno", "Error: již otevřeno", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
 		JMenuItem authors = new JMenuItem("Autoři");
 		JMenuItem close = new JMenuItem("Zavřít");
 		close.addActionListener(new ActionListener() {
@@ -87,18 +115,12 @@ public class GameWindow extends Canvas {
 		frame.setVisible(true);
 	}
 	
+	@SuppressWarnings("static-access")
 	public void initGame(String player, Client c) {
 		isConnected = true;
 		main.c = c;
 		PacketStartLogin login = new PacketStartLogin(player);
 		c.sendTCP(login);
 		
-	}
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		if (isConnected) {
-			
-		}
 	}
 }

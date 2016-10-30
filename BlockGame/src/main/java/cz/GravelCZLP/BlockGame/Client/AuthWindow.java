@@ -3,8 +3,6 @@ package cz.GravelCZLP.BlockGame.Client;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.InetAddress;
 
@@ -26,20 +24,7 @@ public class AuthWindow extends JFrame {
 		c.start();
 		Network.injectPackets(c);
 		setTitle("Pls set server and name");
-		setVisible(true);
 		setSize(420, 360);
-		addWindowListener(new WindowListener() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				
-			}
-			public void windowActivated(WindowEvent e) {}
-			public void windowClosed(WindowEvent e) {}
-			public void windowDeactivated(WindowEvent e) {}
-			public void windowDeiconified(WindowEvent e) {}
-			public void windowIconified(WindowEvent e) {}
-			public void windowOpened(WindowEvent e) {}
-		});
 		setLayout(new FlowLayout());
 		final JTextField name = new JTextField("My Name",20);
 		JButton lan = new JButton("Lan Discovey");
@@ -53,7 +38,7 @@ public class AuthWindow extends JFrame {
 								continue;
 							}
 							c.connect(500, address, i);
-							if (name.getText() == "" || name.getText() == null) {
+							if (name.getText() == "" || name.getText() == null || name.getText() == "My Name") {
 								JOptionPane.showMessageDialog(null, "Prosím nastav si jméno :)", "Není Zadané jmého", JOptionPane.ERROR_MESSAGE);
 								return;
 							}
@@ -94,6 +79,7 @@ public class AuthWindow extends JFrame {
 		add(port);
 		add(lan);
 		add(connect);
+		setVisible(true);
 		pack();
 	}
 }
